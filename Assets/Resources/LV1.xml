@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='us-ascii'?> 
+<Level>
+	<CameraInitialPosition x='0' y='0' z='0'>
+	</CameraInitialPosition>
+	<PlayerInitialPosition x='0' y='0' z='0'>
+	</PlayerInitialPosition>
+	<ArrayOfBlockPosition>
+		<BlockPosition x='0' y='0' z='0'>
+		</BlockPosition>
+		<BlockPosition x='0' y='0' z='0'>
+		</BlockPosition>
+		<BlockPosition x='0' y='0' z='0'>
+		</BlockPosition>	
+	</ArrayOfBlock>
+	<Initial
+</Level>
