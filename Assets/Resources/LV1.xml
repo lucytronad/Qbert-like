@@ -1,16 +1,50 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <Level>
-	<CameraInitialPosition x='0' y='0' z='0'>
+  <ReverseMode>false</ReverseMode>
+	<CameraInitialPosition x='25' y='20' z='25'>
 	</CameraInitialPosition>
-	<PlayerInitialPosition x='0' y='0' z='0'>
+  <CameraInitialRotation x='35' y='225' z='0'>
+  </CameraInitialRotation>
+	<PlayerInitialPosition x='0' y='4' z='0'>
 	</PlayerInitialPosition>
-	<ArrayOfBlockPosition>
-		<BlockPosition x='0' y='0' z='0'>
-		</BlockPosition>
-		<BlockPosition x='0' y='0' z='0'>
-		</BlockPosition>
-		<BlockPosition x='0' y='0' z='0'>
-		</BlockPosition>	
-	</ArrayOfBlock>
-	<Initial
+  <TouchCount>2</TouchCount>
+  <ArrayOfCubeMaterials>
+    <CubeMaterial>block01</CubeMaterial>
+    <CubeMaterial>block04</CubeMaterial>
+    <CubeMaterial>block09</CubeMaterial>
+  </ArrayOfCubeMaterials>
+	<ArrayOfCubes>
+		<Cube x='0' y='0' z='0' player='true'>
+		</Cube>
+		<Cube x='0' y='-7' z='7' player='false'>
+		</Cube>
+		<Cube x='7' y='-7' z='0' player='false'>
+		</Cube>	
+    <Cube x='7' y='-14' z='7' player='false'>
+		</Cube>
+    <Cube x='14' y='-14' z='7' player='false'>
+		</Cube>
+	</ArrayOfCubes>
+  <ArrayOfNeighbors>
+    <Neighbors>
+      <Neighbor>1</Neighbor>
+      <Neighbor>2</Neighbor>
+    </Neighbors>
+    <Neighbors>
+      <Neighbor>0</Neighbor>
+      <Neighbor>3</Neighbor>
+    </Neighbors>
+    <Neighbors>
+      <Neighbor>0</Neighbor>
+      <Neighbor>3</Neighbor>
+    </Neighbors>
+    <Neighbors>
+      <Neighbor>1</Neighbor>
+      <Neighbor>2</Neighbor>
+      <Neighbor>4</Neighbor>
+    </Neighbors>
+    <Neighbors>
+      <Neighbor>3</Neighbor>
+    </Neighbors>
+  </ArrayOfNeighbors>
 </Level>

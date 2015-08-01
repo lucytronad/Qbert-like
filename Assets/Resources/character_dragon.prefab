@@ -7859,9 +7859,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d465d0e2a73d4ea44a9b0bb9c28ee047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upForce: .100000001
-  jumpDownPath: {fileID: 122634, guid: 937608281f64c0849b786cb900ec59a1, type: 2}
-  jumpUpPath: {fileID: 119468, guid: 46f1b793ae061354fb0b661eb6c5fcd5, type: 2}
+  m_jumpDownPath: {fileID: 122634, guid: 937608281f64c0849b786cb900ec59a1, type: 2}
+  m_jumpUpPath: {fileID: 119468, guid: 46f1b793ae061354fb0b661eb6c5fcd5, type: 2}
+  m_jumpForwardPath: {fileID: 124718, guid: 472d9ffd4fdd2774a8ca66f6567bce8d, type: 2}
 --- !u!136 &13699878
 CapsuleCollider:
   m_ObjectHideFlags: 1
@@ -7983,7 +7983,23 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: jumpForwardPath
+      value: 
+      objectReference: {fileID: 124718, guid: 472d9ffd4fdd2774a8ca66f6567bce8d, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_jumpDownPath
+      value: 
+      objectReference: {fileID: 122634, guid: 937608281f64c0849b786cb900ec59a1, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_jumpUpPath
+      value: 
+      objectReference: {fileID: 119468, guid: 46f1b793ae061354fb0b661eb6c5fcd5, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_jumpForwardPath
+      value: 
+      objectReference: {fileID: 124718, guid: 472d9ffd4fdd2774a8ca66f6567bce8d, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 199976}
