@@ -1,15 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyLogic : MonoBehaviour {
+public class EnemyLogic : CharacterLogic {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public EnemyLogic(Vector3 position, CubeLogic cubeLogic) : base (position,cubeLogic)
+    {}
+
 }

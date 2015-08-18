@@ -52,6 +52,13 @@ public class GameLogic {
         set { m_playerLogic = value; }
     }
 
+    private List<EnemyLogic> m_enemyLogics;
+    public List<EnemyLogic> M_EnemyLogics
+    {
+        get { return m_enemyLogics; }
+        set{ m_enemyLogics = value; }
+    }
+
     public GameLogic(string xmlPathFile)
     {
         m_cubeLogics = new List<CubeLogic>();
@@ -61,12 +68,11 @@ public class GameLogic {
 
     public void LoadLevelFromXml(string xmlPathFile)
     {
-        Vector3 playerInitialPosition = Vector3.zero;
         TextAsset xmlData = (TextAsset)Resources.Load(xmlPathFile, typeof(TextAsset));
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.LoadXml(xmlData.text);
-
         XmlNodeList nodeList = xmlDoc.GetElementsByTagName("Level");
+
         if (nodeList.Count == 1)
         {
             XmlNode node = nodeList.Item(0);
@@ -76,20 +82,13 @@ public class GameLogic {
                 {
                     m_reverseMode = XmlConvert.ToBoolean(child.InnerText);
                 }
-
                 if (child.Name == "CameraInitialPosition")
                 {
                     m_cameraInitialPosition = Utility.GetNodePosition(child);
                 }
-
                 if (child.Name == "CameraInitialRotation")
                 {
                     m_cameraInitialRotation = Utility.GetNodePosition(child);
-                }
-
-                if (child.Name == "PlayerInitialPosition")
-                {
-                    playerInitialPosition = Utility.GetNodePosition(child);
                 }
                 if (child.Name == "TouchCount")
                 {
@@ -110,12 +109,7 @@ public class GameLogic {
                     {
                         if(cube.Name == "Cube")
                         {
-                            CubeLogic cubeLogic = new CubeLogic(this, Utility.GetNodePosition(cube), m_cubeMaterials[0]);
-                            m_cubeLogics.Add(cubeLogic);
-                            if(XmlConvert.ToBoolean(cube.Attributes["player"].Value))
-                            {
-                                m_playerLogic = new PlayerLogic(playerInitialPosition, cubeLogic);
-                            }
+                            m_cubeLogics.Add(new CubeLogic(this, Utility.GetNodePosition(cube), m_cubeMaterials[0]));
                         }
                     }
                 }
@@ -140,6 +134,21 @@ public class GameLogic {
                             }
                         }
                     }
+                }
+                if (child.Name == "ArrayOfEnemies")
+                {
+                    m_enemyLogics = new List<EnemyLogic>();
+                    foreach (XmlNode enemy in child.ChildNodes)
+                    {
+                        if (enemy.Name == "Enemy")
+                        {
+                            m_enemyLogics.Add(new EnemyLogic(Utility.GetNodePosition(enemy), m_cubeLogics[Utility.ParseStringToInt(enemy.InnerText)]));
+                        }
+                    }
+                }
+                if (child.Name == "PlayerInitialPosition")
+                {
+                    m_playerLogic = new PlayerLogic(Utility.GetNodePosition(child), m_cubeLogics[Utility.ParseStringToInt(child.InnerText)]);
                 }
             }
         }

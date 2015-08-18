@@ -1,18 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class EnemyController : MonoBehaviour {
+public class EnemyController : CharacterController {
 
-    //private NavMeshAgent agent;
-	// Use this for initialization
-	void Start ()
+    private const float timeBetweenJumps = 1.5f;
+    private float m_timer;
+    
+    private void Start()
     {
-        //agent = GetComponent<NavMeshAgent>();
-	}
-	
-	// Update is called once per frame
-	void Update ()
+        base.Start();
+        m_timer = 0.0f;
+
+    }
+
+    private void Update()
     {
-        //agent.SetDestination(new Vector3(28, -21, 0));
+        m_timer += Time.fixedDeltaTime;
+    }
+
+	private void FixedUpdate ()
+    {
+        
+        base.FixedUpdate();
+        if(!m_isJumping && m_timer >= timeBetweenJumps)
+        {
+            m_timer = 0.0f;
+            Collider[] colliders = Physics.OverlapSphere(m_characterLogic.M_CubeLogic.M_Neighbors[0].M_InitialPosition, 1f);
+            if (colliders.Length == 1)
+            {
+                if (colliders[0].gameObject.tag == "LevelBlock")
+                {
+                    GameObject targetCube = colliders[0].gameObject;
+                    Debug.LogWarning(targetCube.transform.position);
+                    JumpAction(targetCube);
+                }
+            }
+        }
 	}
+
+    public void Initialize(EnemyLogic enemyLogic, GameObject currentCube)
+    {
+        m_characterLogic = enemyLogic;
+        m_currentCube = currentCube;
+    }
 }

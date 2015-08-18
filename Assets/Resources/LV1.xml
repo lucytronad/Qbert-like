@@ -1,12 +1,8 @@
 <?xml version='1.0' encoding='us-ascii'?> 
 <Level>
   <ReverseMode>false</ReverseMode>
-	<CameraInitialPosition x='25' y='20' z='25'>
-	</CameraInitialPosition>
-  <CameraInitialRotation x='35' y='225' z='0'>
-  </CameraInitialRotation>
-	<PlayerInitialPosition x='0' y='4' z='0'>
-	</PlayerInitialPosition>
+	<CameraInitialPosition x='25' y='20' z='25'></CameraInitialPosition>
+  <CameraInitialRotation x='35' y='225' z='0'></CameraInitialRotation>
   <TouchCount>2</TouchCount>
   <ArrayOfCubeMaterials>
     <CubeMaterial>block01</CubeMaterial>
@@ -47,4 +43,8 @@
       <Neighbor>3</Neighbor>
     </Neighbors>
   </ArrayOfNeighbors>
+  <ArrayOfEnemies>
+    <Enemy x='14' y='-13' z='7'>4</Enemy>
+  </ArrayOfEnemies>
+  <PlayerInitialPosition x='0' y='4' z='0'>0</PlayerInitialPosition>
 </Level>

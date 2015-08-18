@@ -10,6 +10,7 @@ TagManager:
   - LevelManager
   - CameraInitialPosition
   - Level
+  - Enemy
   layers:
   - Default
   - TransparentFX

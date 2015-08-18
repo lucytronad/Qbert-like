@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour {
 
     private GameObject m_player;
     private GameObject m_targetCube;
+    private GameObject m_enemy;
 
 	public static GameController Instance
 	{
@@ -72,7 +73,7 @@ public class GameController : MonoBehaviour {
                     m_targetCube = hitInfo.transform.gameObject;
                 }
             }
-            if (m_gameLogic.M_PlayerLogic.M_CubeLogic.M_Neighbors.Contains(m_targetCube.GetComponent<CubeController>().M_CubeLogic))
+            if (m_targetCube !=null && m_gameLogic.M_PlayerLogic.M_CubeLogic.M_Neighbors.Contains(m_targetCube.GetComponent<CubeController>().M_CubeLogic))
             {
                 m_player.GetComponent<PlayerController>().JumpAction(m_targetCube);
             }
@@ -102,18 +103,28 @@ public class GameController : MonoBehaviour {
             go.GetComponent<CubeController>().Initialize(cube);
         }
 
-        GameObject currentPlayerCube = new GameObject();
         Collider[] colliders = Physics.OverlapSphere(m_gameLogic.M_PlayerLogic.M_CubeLogic.M_InitialPosition, 1f);
         if (colliders.Length == 1)
         {
             if (colliders[0].gameObject.tag == "LevelBlock")
             {
-                currentPlayerCube = colliders[0].gameObject;
+                GameObject currentPlayerCube = colliders[0].gameObject;
+                //m_player = Instantiate(Resources.Load("player"), m_gameLogic.M_PlayerLogic.M_InitialPosition, Quaternion.identity) as GameObject;
+                //m_player.GetComponent<PlayerController>().Initialize(m_gameLogic.M_PlayerLogic, currentPlayerCube);
             }
         }
 
-        m_player = Instantiate(Resources.Load("character_dragon"), m_gameLogic.M_PlayerLogic.M_InitialPosition, Quaternion.identity) as GameObject;
-        m_player.GetComponent<PlayerController>().Initialize(m_gameLogic.M_PlayerLogic, currentPlayerCube);
+        colliders = Physics.OverlapSphere(m_gameLogic.M_EnemyLogics[0].M_CubeLogic.M_InitialPosition, 1f);
+        if (colliders.Length == 1)
+        {
+            if (colliders[0].gameObject.tag == "LevelBlock")
+            {
+                GameObject currentEnemyCube = colliders[0].gameObject;
+                m_enemy = Instantiate(Resources.Load("enemy"), m_gameLogic.M_EnemyLogics[0].M_InitialPosition, Quaternion.identity) as GameObject;
+                m_enemy.GetComponent<EnemyController>().Initialize(m_gameLogic.M_EnemyLogics[0], currentEnemyCube);
+            }
+        }
+        
 
         Camera.main.transform.position = m_gameLogic.M_CameraInitialPosition;
         Camera.main.transform.rotation = Quaternion.Euler(m_gameLogic.M_CameraInitialRotation);

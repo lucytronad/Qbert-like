@@ -14,7 +14,7 @@ public class CubeController : MonoBehaviour {
 
     private Renderer m_renderer;
 
-	public void Awake()
+	private void Awake()
 	{
         m_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         m_renderer = GetComponent<Renderer>();
@@ -27,7 +27,7 @@ public class CubeController : MonoBehaviour {
         this.m_cubeLogic = cubeLogic;
     }
 
-	void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter(Collider other)
 	{
 		if(other.tag == "Player")
 		{
