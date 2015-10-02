@@ -40,6 +40,7 @@ public class CharacterController : MonoBehaviour {
         }
     }
 
+    //Instant rotation to look in the direction of the jump
     protected void FaceJumpPoint()
     {
         Vector3 lookAtDirection = m_targetCube.transform.GetChild(0).position;
@@ -47,6 +48,7 @@ public class CharacterController : MonoBehaviour {
         transform.LookAt(lookAtDirection);
     }
 
+    //Initialize the jump according to its type
     protected void InitJump()
     {
         if (m_targetCube.transform.position.y > m_currentCube.transform.position.y)
@@ -68,6 +70,7 @@ public class CharacterController : MonoBehaviour {
         m_isJumping = true;
         m_characterLogic.Jump(m_targetCube.GetComponent<CubeController>().M_CubeLogic);
     }
+
 
     protected void Jump(string jump, int jumpType)
     {
