@@ -11,6 +11,8 @@ TagManager:
   - CameraInitialPosition
   - Level
   - Enemy
+  - Canvas
+  - UIManager
   layers:
   - Default
   - TransparentFX

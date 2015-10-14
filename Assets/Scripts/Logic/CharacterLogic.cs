@@ -22,9 +22,8 @@ public abstract class CharacterLogic {
         m_cubeLogic = cubeLogic;
     }
 
-    public void Jump(CubeLogic cubeLogic)
+    public virtual void Jump(CubeLogic cubeLogic)
     {
         m_cubeLogic = cubeLogic;
-        m_cubeLogic.IsReached();
     }
 }

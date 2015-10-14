@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CharacterController : MonoBehaviour {
+public class QCharacterController : MonoBehaviour {
 
     public GameObject m_jumpDownPath;
     public GameObject m_jumpUpPath;
@@ -10,6 +10,7 @@ public class CharacterController : MonoBehaviour {
     protected Animator m_animator;
 
     protected bool m_isJumping = false;
+    protected bool m_hasJumped = false;
     protected string m_jumpType;
     protected int m_jumpPathType;
 
@@ -17,12 +18,16 @@ public class CharacterController : MonoBehaviour {
     protected GameObject m_currentCube;
 
     protected CharacterLogic m_characterLogic;
+    public CharacterLogic M_CharacterLogic
+    {
+        get { return m_characterLogic; }
+    }
 
-	protected void Start () {
+	protected virtual void Start () {
         m_animator = GetComponent<Animator>();
 	}
 
-    protected void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (m_isJumping)
         {
@@ -74,10 +79,10 @@ public class CharacterController : MonoBehaviour {
 
     protected void Jump(string jump, int jumpType)
     {
-        if (m_animator.GetFloat(jump) > 0f)
+        if (m_animator.GetFloat(jump) > 0 && !m_hasJumped)
         {
             Vector3 spawnPosition = m_currentCube.transform.GetChild(0).position;
-            Vector3 forwardDirection = m_targetCube.transform.position - m_currentCube.transform.position;
+            Vector3 forwardDirection = transform.forward;// m_targetCube.transform.position - m_currentCube.transform.position;
             forwardDirection.y = 0;
             Quaternion spawnRotation = Quaternion.LookRotation(forwardDirection, m_currentCube.transform.up);
 
@@ -89,11 +94,24 @@ public class CharacterController : MonoBehaviour {
             Hashtable ht = new Hashtable();
             ht.Add("path", transforms);
             ht.Add("time", 1.0f);
+            ht.Add("onComplete", "EndJump");
+            ht.Add("onCompleteParams", jump);
             iTween.MoveTo(gameObject, ht);
-
+            m_hasJumped = true;
             m_currentCube = m_targetCube;
-            m_isJumping = false;
             m_animator.SetBool("Is" + jump, false);
         }
+    }
+
+    public void EndJump(string jump)
+    {
+        m_hasJumped = false;
+        m_isJumping = false;     
+    }
+
+    public virtual void Initialize(CharacterLogic characterLogic, GameObject currentCube)
+    {
+        m_characterLogic = characterLogic;
+        m_currentCube = currentCube;
     }
 }

@@ -40,6 +40,7 @@ public class CubeLogic {
         m_initialPosition = position;
         m_neighbors = new List<CubeLogic>();
         m_material = material;
+        m_touchCount = 0;
     }
 
     public void AddNeighbor(CubeLogic cubeLogic)
@@ -61,15 +62,25 @@ public class CubeLogic {
         }
         else
         {
-            if(m_touchCount<m_gameLogic.M_TouchCount)
+            if(m_touchCount<=m_gameLogic.M_TouchCount)
             {
                 m_material = m_gameLogic.M_CubeMaterial[m_touchCount];
             }
-            else
+        }
+    }
+
+    public List<CubeLogic> FindLowerNeighbors()
+    {
+        List<CubeLogic> lowerNeighbors = new List<CubeLogic>();
+        foreach(CubeLogic cubeLogic in m_neighbors)
+        {
+            if(cubeLogic.M_InitialPosition.y < m_initialPosition.y)
             {
-                m_material = m_gameLogic.M_CubeMaterial[m_gameLogic.M_TouchCount];
+                lowerNeighbors.Add(cubeLogic);
             }
         }
+
+        return lowerNeighbors;
     }
 
 }

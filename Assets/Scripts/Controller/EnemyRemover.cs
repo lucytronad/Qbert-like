@@ -1,27 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : QCharacterController {
+public class EnemyRemover : MonoBehaviour {
 
     private GameController m_gameController;
 
-    protected override void Start()
-    {
-        base.Start();
+	// Use this for initialization
+	void Start () {
         m_gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-    }
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
+	}
 
-
-    void OnTriggerEnter(Collider other)
+    void OnTriggerExit(Collider other)
     {
-        if(other.tag == "Enemy")
+        if (other.tag == "Enemy")
         {
-            this.GetComponent<Rigidbody>().isKinematic = true;
             EnemyController enemyController = other.gameObject.GetComponent<EnemyController>();
             m_gameController.M_GameLogic.M_EnemyLogics.Remove((EnemyLogic)enemyController.M_CharacterLogic);
             Destroy(other.gameObject);
-            ((PlayerLogic)m_characterLogic).M_IsDead = true;
         }
     }
-
 }

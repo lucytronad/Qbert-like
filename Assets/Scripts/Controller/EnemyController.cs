@@ -1,46 +1,62 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-public class EnemyController : CharacterController {
+public class EnemyController : QCharacterController {
 
+    private const float initialTimer = 0.0f;
     private const float timeBetweenJumps = 1.5f;
     private float m_timer;
     
-    private void Start()
+    protected override void Start()
     {
         base.Start();
-        m_timer = 0.0f;
+        m_timer = initialTimer;
 
     }
 
-    private void Update()
+    void Update()
     {
         m_timer += Time.fixedDeltaTime;
     }
 
-	private void FixedUpdate ()
+    protected override void FixedUpdate()
     {
-        
+        m_timer += Time.fixedDeltaTime;
         base.FixedUpdate();
-        if(!m_isJumping && m_timer >= timeBetweenJumps)
+        if(!m_isJumping && m_timer >= timeBetweenJumps && m_characterLogic.M_CubeLogic != null)
         {
             m_timer = 0.0f;
-            Collider[] colliders = Physics.OverlapSphere(m_characterLogic.M_CubeLogic.M_Neighbors[0].M_InitialPosition, 1f);
-            if (colliders.Length == 1)
+            //Randomly choose a lower neighbor to jump to
+            System.Random rnd = new System.Random();
+            List<CubeLogic> lowerNeighbor = m_characterLogic.M_CubeLogic.FindLowerNeighbors();
+            if(lowerNeighbor.Count > 0)
             {
-                if (colliders[0].gameObject.tag == "LevelBlock")
+                Collider[] colliders = Physics.OverlapSphere(lowerNeighbor[rnd.Next(0,lowerNeighbor.Count)].M_InitialPosition, 1f);
+                if (colliders.Length == 1)
                 {
-                    GameObject targetCube = colliders[0].gameObject;
-                    Debug.LogWarning(targetCube.transform.position);
-                    JumpAction(targetCube);
+                    if (colliders[0].gameObject.tag == "LevelBlock")
+                    {
+                        GameObject targetCube = colliders[0].gameObject;
+                        JumpAction(targetCube);
+                    }
                 }
             }
+            else
+            {
+                //Suicide jump
+                SuicideJump();
+            }
+            
         }
 	}
 
-    public void Initialize(EnemyLogic enemyLogic, GameObject currentCube)
+    private void SuicideJump()
     {
-        m_characterLogic = enemyLogic;
-        m_currentCube = currentCube;
+        m_jumpType = "JumpingDown";
+        m_jumpPathType = 1;
+        m_animator.SetBool("Is" + m_jumpType, true);
+        m_isJumping = true;
+        m_characterLogic.Jump(null);
     }
 }

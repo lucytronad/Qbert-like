@@ -52,6 +52,13 @@ public class GameLogic {
         set { m_playerLogic = value; }
     }
 
+    private List<SpawnerLogic> m_spawnerLogics;
+    public List<SpawnerLogic> M_SpawnerLogics
+    {
+        get { return m_spawnerLogics; }
+        set { m_spawnerLogics = value; }
+    }
+
     private List<EnemyLogic> m_enemyLogics;
     public List<EnemyLogic> M_EnemyLogics
     {
@@ -59,10 +66,19 @@ public class GameLogic {
         set{ m_enemyLogics = value; }
     }
 
+    private int m_maximumEnemiesNumber;
+    public int M_MaximumEnemiesNumber
+    {
+        get { return m_maximumEnemiesNumber; }
+    }
+
     public GameLogic(string xmlPathFile)
     {
         m_cubeLogics = new List<CubeLogic>();
+        m_spawnerLogics = new List<SpawnerLogic>();
+        m_enemyLogics = new List<EnemyLogic>();
         LoadLevelFromXml(xmlPathFile);
+        MapNeighors();
         Debug.Log(ToString());
     }
 
@@ -110,48 +126,67 @@ public class GameLogic {
                         if(cube.Name == "Cube")
                         {
                             m_cubeLogics.Add(new CubeLogic(this, Utility.GetNodePosition(cube), m_cubeMaterials[0]));
-                        }
-                    }
-                }
-                if (child.Name == "ArrayOfNeighbors")
-                {
-                    for (int i = 0; i < child.ChildNodes.Count; i++)
-                    {
-                        if (child.ChildNodes[i].Name == "Neighbors")
-                        {
-                            foreach(XmlNode neighbor in child.ChildNodes[i])
+                            if(cube.Attributes["spawner"] != null)
                             {
-                                int neighborIndex = Utility.ParseStringToInt(neighbor.InnerText);
-                                if(neighborIndex >= 0 && neighborIndex < m_cubeLogics.Count)
-                                {
-                                    m_cubeLogics[i].AddNeighbor(m_cubeLogics[neighborIndex]);
-                                }
-                                else
-                                {
-                                    Debug.LogError("Neighbor index is not valid.");
-                                }
-                                
+                                m_spawnerLogics.Add(new SpawnerLogic(Utility.GetNodePosition(cube)));
                             }
-                        }
-                    }
-                }
-                if (child.Name == "ArrayOfEnemies")
-                {
-                    m_enemyLogics = new List<EnemyLogic>();
-                    foreach (XmlNode enemy in child.ChildNodes)
-                    {
-                        if (enemy.Name == "Enemy")
-                        {
-                            m_enemyLogics.Add(new EnemyLogic(Utility.GetNodePosition(enemy), m_cubeLogics[Utility.ParseStringToInt(enemy.InnerText)]));
                         }
                     }
                 }
                 if (child.Name == "PlayerInitialPosition")
                 {
-                    m_playerLogic = new PlayerLogic(Utility.GetNodePosition(child), m_cubeLogics[Utility.ParseStringToInt(child.InnerText)]);
+                    Vector3 playerPosition = Utility.GetNodePosition(child);
+                    m_playerLogic = new PlayerLogic(Utility.GetNodePosition(child), FindCubeByPosition(playerPosition));
+                }
+                if(child.Name == "MaximumEnemiesNumber")
+                {
+                    m_maximumEnemiesNumber = Utility.ParseStringToInt(child.InnerText);
                 }
             }
         }
+    }
+
+    public void MapNeighors()
+    {
+        foreach(CubeLogic cube in m_cubeLogics)
+        {
+            List<Vector3> possibleNeighborPosition = new List<Vector3> { 
+                                                        new Vector3(cube.M_InitialPosition.x+7, cube.M_InitialPosition.y, cube.M_InitialPosition.z),
+                                                        new Vector3(cube.M_InitialPosition.x-7, cube.M_InitialPosition.y, cube.M_InitialPosition.z),
+                                                        new Vector3(cube.M_InitialPosition.x, cube.M_InitialPosition.y, cube.M_InitialPosition.z+7),
+                                                        new Vector3(cube.M_InitialPosition.x, cube.M_InitialPosition.y, cube.M_InitialPosition.z-7),
+                                                        new Vector3(cube.M_InitialPosition.x+7, cube.M_InitialPosition.y+7, cube.M_InitialPosition.z),
+                                                        new Vector3(cube.M_InitialPosition.x-7, cube.M_InitialPosition.y+7, cube.M_InitialPosition.z),
+                                                        new Vector3(cube.M_InitialPosition.x, cube.M_InitialPosition.y+7, cube.M_InitialPosition.z+7),
+                                                        new Vector3(cube.M_InitialPosition.x, cube.M_InitialPosition.y+7, cube.M_InitialPosition.z-7),
+                                                        new Vector3(cube.M_InitialPosition.x+7, cube.M_InitialPosition.y-7, cube.M_InitialPosition.z),
+                                                        new Vector3(cube.M_InitialPosition.x-7, cube.M_InitialPosition.y-7, cube.M_InitialPosition.z),
+                                                        new Vector3(cube.M_InitialPosition.x, cube.M_InitialPosition.y-7, cube.M_InitialPosition.z+7),
+                                                        new Vector3(cube.M_InitialPosition.x, cube.M_InitialPosition.y-7, cube.M_InitialPosition.z-7)
+                                                    };
+
+            foreach(Vector3 v in possibleNeighborPosition)
+            {
+                CubeLogic neighbor = FindCubeByPosition(v);
+                if (neighbor!= null)
+                {
+                    cube.AddNeighbor(neighbor);
+                }
+            }
+
+        }
+    }
+
+    public CubeLogic FindCubeByPosition(Vector3 position)
+    {
+        foreach (CubeLogic cube in m_cubeLogics)
+        {
+            if (cube.M_InitialPosition == position)
+            {
+                return cube;
+            }
+        }
+        return null;
     }
 
     public override string ToString() 
